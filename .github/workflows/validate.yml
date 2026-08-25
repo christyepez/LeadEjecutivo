@@ -50,6 +50,8 @@ jobs:
           for f in definition_dir.rglob('*.tmdl'):
               text = f.read_text(encoding='utf-8')
               assert '\\t' not in text, f'Literal tab escape found in TMDL: {f}'
+              unsupported_descriptions = [ln for ln in text.splitlines() if re.match(r'^\s+description\s*:', ln)]
+              assert not unsupported_descriptions, f'Unsupported description property in TMDL: {f}: {unsupported_descriptions[:3]}'
 
           model_text = (definition_dir/'model.tmdl').read_text(encoding='utf-8')
           bad_refs = [ln for ln in model_text.splitlines() if re.match(r'^\s+ref\s+', ln)]
