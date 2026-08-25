@@ -1,11 +1,11 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-  "name": "921c5b55e70ce72c4482",
+  "name": "783eb0f1b65039a1de94",
   "position": {
     "x": 25,
-    "y": 630,
+    "y": 615,
     "z": 2,
-    "height": 55,
+    "height": 70,
     "width": 1230,
     "tabOrder": 2
   },
@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Página Grados: use el filtro Unidad de negocio para seleccionar los valores reales de Salesforce que correspondan a Grados. No se hardcodean códigos no validados.",
+                    "value": "Storytelling: Captación → Gestión → Cita efectiva → Proyección → Inscripción → Matrícula. Rango operativo por defecto: 01/05/2026 hasta hoy. La línea compara acumulados YTD de Leads, gestionados, citas efectivas y perdidos. Matrícula/inscripción/proyección siguen pendientes de mapear contra objetos transaccionales reales de Salesforce.",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",

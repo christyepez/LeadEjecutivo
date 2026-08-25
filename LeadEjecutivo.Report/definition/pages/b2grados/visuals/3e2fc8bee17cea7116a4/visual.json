@@ -1,6 +1,6 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-  "name": "5a4db533c59a607e3a8c",
+  "name": "3e2fc8bee17cea7116a4",
   "position": {
     "x": 25,
     "y": 630,
@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Página Posgrados: use el filtro Unidad de negocio para seleccionar los valores reales de Salesforce que correspondan a Posgrados. No se hardcodean códigos no validados.",
+                    "value": "Página Grados: el modelo intenta resolver automáticamente nombres alternativos de origen/campaña/carrera. Unidad de negocio permanece sin equivalencia hardcodeada hasta validar su catálogo real en Salesforce.",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",

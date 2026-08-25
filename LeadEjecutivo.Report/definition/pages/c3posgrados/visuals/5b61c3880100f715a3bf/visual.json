@@ -1,11 +1,11 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-  "name": "dbe690a601d9998bc7ed",
+  "name": "5b61c3880100f715a3bf",
   "position": {
     "x": 25,
-    "y": 615,
+    "y": 630,
     "z": 2,
-    "height": 70,
+    "height": 55,
     "width": 1230,
     "tabOrder": 2
   },
@@ -19,10 +19,10 @@
               {
                 "textRuns": [
                   {
-                    "value": "Storytelling: Captación → Gestión → Cita efectiva → Proyección → Inscripción → Matrícula. Los tres últimos hitos usan mapeo provisional por Status hasta validar objetos dedicados en Salesforce.",
+                    "value": "Página Posgrados: el modelo intenta resolver automáticamente nombres alternativos de origen/campaña/carrera. Unidad de negocio permanece sin equivalencia hardcodeada hasta validar su catálogo real en Salesforce.",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "11pt",
+                      "fontSize": "10pt",
                       "fontWeight": "normal",
                       "color": "#2B2036"
                     }

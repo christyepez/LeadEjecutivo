@@ -1,6 +1,6 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-  "name": "bb571362c71775f09250",
+  "name": "c219b0bb5e9888a658fd",
   "position": {
     "x": 465,
     "y": 285,
@@ -87,7 +87,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Evolución de Leads en el tiempo'"
+                  "Value": "'Comparación YTD: Leads, gestionados, citas y perdidos'"
                 }
               }
             }
@@ -125,11 +125,53 @@
                       "Entity": "Candidato"
                     }
                   },
-                  "Property": "Total Leads"
+                  "Property": "Leads YTD"
                 }
               },
-              "queryRef": "Candidato.Total Leads",
-              "nativeQueryRef": "Total Leads"
+              "queryRef": "Candidato.Leads YTD",
+              "nativeQueryRef": "Leads YTD"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Candidato"
+                    }
+                  },
+                  "Property": "Gestionados YTD"
+                }
+              },
+              "queryRef": "Candidato.Gestionados YTD",
+              "nativeQueryRef": "Gestionados YTD"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Candidato"
+                    }
+                  },
+                  "Property": "Citas Efectivas YTD"
+                }
+              },
+              "queryRef": "Candidato.Citas Efectivas YTD",
+              "nativeQueryRef": "Citas Efectivas YTD"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Candidato"
+                    }
+                  },
+                  "Property": "Perdidos YTD"
+                }
+              },
+              "queryRef": "Candidato.Perdidos YTD",
+              "nativeQueryRef": "Perdidos YTD"
             }
           ]
         }
