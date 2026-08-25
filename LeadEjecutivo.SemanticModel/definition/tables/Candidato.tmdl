@@ -31,6 +31,18 @@ table Candidato
 	measure '% Gestionado a Matricula' = DIVIDE([Total Matriculas], [Leads Gestionados])
 		formatString: 0.0%
 
+	measure 'Leads YTD' = TOTALYTD([Total Leads], DimFecha[Date])
+		formatString: #,0
+
+	measure 'Gestionados YTD' = TOTALYTD([Leads Gestionados], DimFecha[Date])
+		formatString: #,0
+
+	measure 'Citas Efectivas YTD' = TOTALYTD([Citas Efectivas], DimFecha[Date])
+		formatString: #,0
+
+	measure 'Perdidos YTD' = TOTALYTD([Leads Perdidos], DimFecha[Date])
+		formatString: #,0
+
 	measure 'Matriculas YTD' = TOTALYTD([Total Matriculas], DimFecha[Date])
 		formatString: #,0
 
@@ -73,7 +85,7 @@ table Candidato
 
 	column OwnerName
 		dataType: string
-		sourceColumn: Owner.Name
+		sourceColumn: OwnerName
 
 	column UI_Periodo__c
 		dataType: string
@@ -116,8 +128,29 @@ table Candidato
 		source = ```
 let
     Source = SalesforceSource,
-    Lead = Source{[Name="Lead"]}[Data],
-    Keep = Table.SelectColumns(Lead,{"Id","Status","CreatedDate","LastActivityDate","OwnerId","Owner.Name","UI_Periodo__c","UI_Sede__c","UI_UnidadNegocio__c","UI_CarreraPrimeraOpcionWeb__c","UI_Modalidad__c","UI_Origen__c","UI_Campana__c","UI_RazonPerdido__c","UI_SubrazonPerdido__c"}, MissingField.UseNull)
+    Lead0 = Source{[Name="Lead"]}[Data],
+    EnsureColumn = (tbl as table, output as text, candidates as list) as table =>
+        let
+            Existing = List.First(List.Select(candidates, each Table.HasColumns(tbl, {_})), null),
+            Result = if Table.HasColumns(tbl, {output}) then tbl
+                     else if Existing <> null then Table.RenameColumns(tbl, {{Existing, output}})
+                     else Table.AddColumn(tbl, output, each null, type nullable text)
+        in
+            Result,
+    Lead1 = EnsureColumn(Lead0, "UI_Periodo__c", {"UI_Periodo__c","Periodo__c","Periodo"}),
+    Lead2 = EnsureColumn(Lead1, "UI_Sede__c", {"UI_Sede__c","Sede__c","Sede"}),
+    Lead3 = EnsureColumn(Lead2, "UI_UnidadNegocio__c", {"UI_UnidadNegocio__c","UnidadNegocio__c","Unidad_de_Negocio__c","BusinessUnit__c"}),
+    Lead4 = EnsureColumn(Lead3, "UI_CarreraPrimeraOpcionWeb__c", {"UI_CarreraPrimeraOpcionWeb__c","UI_CarreraCursar__c","Carrera__c","Carrera"}),
+    Lead5 = EnsureColumn(Lead4, "UI_Modalidad__c", {"UI_Modalidad__c","Modalidad__c","Modalidad"}),
+    Lead6 = EnsureColumn(Lead5, "UI_Origen__c", {"UI_Origen__c","UI_Fuente__c","Fuente__c","LeadSource"}),
+    Lead7 = EnsureColumn(Lead6, "UI_Campana__c", {"UI_Campana__c","Campana__c","CampaignId"}),
+    Lead8 = EnsureColumn(Lead7, "UI_RazonPerdido__c", {"UI_RazonPerdido__c","RazonPerdido__c","ReasonLost__c"}),
+    Lead9 = EnsureColumn(Lead8, "UI_SubrazonPerdido__c", {"UI_SubrazonPerdido__c","SubrazonPerdido__c"}),
+    Keep = Table.SelectColumns(Lead9,{"Id","Status","CreatedDate","LastActivityDate","OwnerId","UI_Periodo__c","UI_Sede__c","UI_UnidadNegocio__c","UI_CarreraPrimeraOpcionWeb__c","UI_Modalidad__c","UI_Origen__c","UI_Campana__c","UI_RazonPerdido__c","UI_SubrazonPerdido__c"}, MissingField.UseNull),
+    UsersRaw = try Source{[Name="User"]}[Data] otherwise #table({"Id","Name"},{}),
+    Users = Table.SelectColumns(UsersRaw,{"Id","Name"}, MissingField.UseNull),
+    Joined = Table.NestedJoin(Keep,{"OwnerId"},Users,{"Id"},"OwnerUser",JoinKind.LeftOuter),
+    Expanded = Table.ExpandTableColumn(Joined,"OwnerUser",{"Name"},{"OwnerName"})
 in
-    Keep
+    Expanded
 ```
