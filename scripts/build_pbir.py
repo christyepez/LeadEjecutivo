@@ -63,6 +63,11 @@ def chart(page,vtype,measure,entity,col,x,y,w,h,title):
     d["visual"]["query"]={"queryState":{"Category":{"projections":[cfield(entity,col)]},"Values":{"projections":[mfield("Candidato",measure)]}}}
     write(page,d)
 
+def multi_chart(page,vtype,measures,entity,col,x,y,w,h,title):
+    d=base(vtype,x,y,w,h,title,key="|".join(measures)+f"|{entity}.{col}")
+    d["visual"]["query"]={"queryState":{"Category":{"projections":[cfield(entity,col)]},"Values":{"projections":[mfield("Candidato",m) for m in measures]}}}
+    write(page,d)
+
 def funnel(page,x,y,w,h):
     d=base("funnel",x,y,w,h,"Journey de Leads por estado",key="journey")
     d["visual"]["query"]={"queryState":{"Category":{"projections":[cfield("Candidato","Status")]},"Y":{"projections":[mfield("Candidato","Total Leads")]}}}
@@ -95,10 +100,10 @@ def build():
     for i,(m,t) in enumerate([("Total Leads","Leads"),("Total Proyectados","Proyectados"),("Total Inscritos","Inscritos"),("Total Matriculas","Matrículas"),("Matriculas YTD","Matrículas YTD")]):
         card(p,m,25+i*245,165,225,100,t)
     funnel(p,25,285,420,310)
-    chart(p,"lineChart","Total Leads","DimFecha","Date",465,285,790,145,"Evolución de Leads en el tiempo")
+    multi_chart(p,"lineChart",["Leads YTD","Gestionados YTD","Citas Efectivas YTD","Perdidos YTD"],"DimFecha","Date",465,285,790,145,"Comparación YTD: Leads, gestionados, citas y perdidos")
     chart(p,"clusteredColumnChart","Total Matriculas","Candidato","UI_Periodo__c",465,445,380,150,"Matrículas por período académico")
     chart(p,"clusteredBarChart","Total Matriculas","Candidato","UI_CarreraPrimeraOpcionWeb__c",860,445,395,150,"Carreras que más matriculan")
-    text(p,"Storytelling: Captación → Gestión → Cita efectiva → Proyección → Inscripción → Matrícula. Los tres últimos hitos usan mapeo provisional por Status hasta validar objetos dedicados en Salesforce.",25,615,1230,70,11,False,None,"story")
+    text(p,"Storytelling: Captación → Gestión → Cita efectiva → Proyección → Inscripción → Matrícula. Rango operativo por defecto: 01/05/2026 hasta hoy. La línea compara acumulados YTD de Leads, gestionados, citas efectivas y perdidos. Matrícula/inscripción/proyección siguen pendientes de mapear contra objetos transaccionales reales de Salesforce.",25,615,1230,70,10,False,None,"story")
 
     for p,label in [("b2grados","Grados"),("c3posgrados","Posgrados")]:
         for i,(m,t) in enumerate([("Total Leads","Total Leads"),("Leads Perdidos","Perdidos"),("Total Matriculas","Matrículas"),("% Perdidos","% Perdidos"),("% Lead a Matricula","% Lead → Matrícula")]):
@@ -109,7 +114,7 @@ def build():
         chart(p,"clusteredBarChart","Total Matriculas","Candidato","UI_CarreraPrimeraOpcionWeb__c",25,460,385,155,"Carreras que más matriculan")
         chart(p,"clusteredBarChart","Leads Perdidos","Candidato","UI_RazonPerdido__c",430,460,385,155,"Dónde se pierden los Leads")
         chart(p,"clusteredBarChart","Leads Sin Actividad 7d","Candidato","UI_CarreraPrimeraOpcionWeb__c",835,460,420,155,"Queda menos: Leads sin actividad 7d")
-        text(p,f"Página {label}: use el filtro Unidad de negocio para seleccionar los valores reales de Salesforce que correspondan a {label}. No se hardcodean códigos no validados.",25,630,1230,55,10,False,None,"footnote")
+        text(p,f"Página {label}: el modelo intenta resolver automáticamente nombres alternativos de origen/campaña/carrera. Unidad de negocio permanece sin equivalencia hardcodeada hasta validar su catálogo real en Salesforce.",25,630,1230,55,10,False,None,"footnote")
 
     p="d4asesores"
     for i,(m,t) in enumerate([("Total Leads","Leads asignados"),("Leads Gestionados","Gestionados"),("Leads Perdidos","Perdidos"),("Total Matriculas","Matrículas"),("Leads Sin Actividad 7d","Sin actividad 7d")]):
