@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate JSON and required files
+      - name: Validate PBIP, PBIR and TMDL structure
         shell: python
         run: |
           import json, pathlib
@@ -14,34 +14,40 @@ jobs:
           required = [
               'LeadEjecutivo.pbip',
               'LeadEjecutivo.Report/definition.pbir',
+              'LeadEjecutivo.Report/definition/version.json',
+              'LeadEjecutivo.Report/definition/report.json',
+              'LeadEjecutivo.Report/definition/pages/pages.json',
               'LeadEjecutivo.SemanticModel/definition.pbism',
               'LeadEjecutivo.SemanticModel/definition/model.tmdl',
               'LeadEjecutivo.SemanticModel/definition/database.tmdl',
               'LeadEjecutivo.SemanticModel/definition/relationships.tmdl',
           ]
-
           for p in required:
               assert (root / p).exists(), f'Missing required artifact: {p}'
 
           for f in root.rglob('*.json'):
               json.loads(f.read_text(encoding='utf-8'))
 
-          pbism_path = root / 'LeadEjecutivo.SemanticModel/definition.pbism'
-          pbism = json.loads(pbism_path.read_text(encoding='utf-8'))
-          version = float(pbism.get('version', '0'))
-          assert version >= 4.0, (
-              'TMDL semantic models require definition.pbism version 4.0 or above. '
-              'Version 1.0 makes Power BI require model.bim.'
-          )
+          pbir = json.loads((root/'LeadEjecutivo.Report/definition.pbir').read_text(encoding='utf-8'))
+          assert float(pbir.get('version','0')) >= 4.0, 'PBIR folder format requires definition.pbir version 4.0+'
+          assert pbir.get('datasetReference',{}).get('byPath',{}).get('path') == '../LeadEjecutivo.SemanticModel', 'Invalid semantic model byPath reference'
 
-          definition_dir = root / 'LeadEjecutivo.SemanticModel/definition'
+          report_version = json.loads((root/'LeadEjecutivo.Report/definition/version.json').read_text(encoding='utf-8'))
+          assert report_version.get('version') == '2.0.0', 'PBIR definition/version.json must be 2.0.0'
+
+          pages = json.loads((root/'LeadEjecutivo.Report/definition/pages/pages.json').read_text(encoding='utf-8'))
+          assert pages.get('pageOrder'), 'pageOrder is empty'
+          assert pages.get('activePageName') in pages['pageOrder'], 'activePageName is not in pageOrder'
+          for page_id in pages['pageOrder']:
+              assert (root/f'LeadEjecutivo.Report/definition/pages/{page_id}/page.json').exists(), f'Missing page.json for {page_id}'
+
+          pbism = json.loads((root/'LeadEjecutivo.SemanticModel/definition.pbism').read_text(encoding='utf-8'))
+          assert float(pbism.get('version','0')) >= 4.0, 'TMDL semantic models require definition.pbism version 4.0+'
+
+          definition_dir = root/'LeadEjecutivo.SemanticModel/definition'
           assert definition_dir.is_dir(), 'TMDL definition folder is missing'
-
-          model_bim = root / 'LeadEjecutivo.SemanticModel/model.bim'
-          assert not model_bim.exists(), 'Project must not mix TMDL definition/ with model.bim'
-
+          assert not (root/'LeadEjecutivo.SemanticModel/model.bim').exists(), 'Do not mix TMDL definition/ with model.bim'
           for f in definition_dir.rglob('*.tmdl'):
-              text = f.read_text(encoding='utf-8')
-              assert '\\t' not in text, f'Literal tab escape found in TMDL: {f}'
+              assert '\\t' not in f.read_text(encoding='utf-8'), f'Literal tab escape found in TMDL: {f}'
 
-          print('PBIP/TMDL structure validation passed')
+          print('PBIP/PBIR/TMDL structure validation passed')
