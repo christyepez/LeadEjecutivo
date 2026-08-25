@@ -3,6 +3,19 @@ table DimFecha
 		dataType: dateTime
 		isKey
 		formatString: Short Date
-	partition DimFecha = calculated
+		sourceColumn: Date
+
+	partition DimFecha = m
 		mode: import
-		source = CALENDAR(DATE(YEAR(TODAY())-5,1,1), DATE(YEAR(TODAY())+1,12,31))
+		source = ```
+let
+    Today = Date.From(DateTime.LocalNow()),
+    StartDate = #date(Date.Year(Today)-5, 1, 1),
+    EndDate = #date(Date.Year(Today)+1, 12, 31),
+    DayCount = Duration.Days(EndDate - StartDate) + 1,
+    Dates = List.Dates(StartDate, DayCount, #duration(1,0,0,0)),
+    T = Table.FromList(Dates, Splitter.SplitByNothing(), {"Date"}),
+    Typed = Table.TransformColumns(T, {{"Date", each DateTime.From(_), type datetime}})
+in
+    Typed
+```
