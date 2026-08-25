@@ -1,6 +1,6 @@
 expression SalesforceSource = ```
 let
-    Source = Salesforce.Data("https://login.salesforce.com/", [ApiVersion="61.0"])
+    Source = Salesforce.Data("https://login.salesforce.com/")
 in
     Source
 ```
