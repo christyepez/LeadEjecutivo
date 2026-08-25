@@ -1,0 +1,38 @@
+name: Normalize TMDL
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/normalize_tmdl.py'
+      - '.github/tmdl-trigger.txt'
+permissions:
+  contents: write
+jobs:
+  normalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Normalize TMDL indentation
+        run: python scripts/normalize_tmdl.py
+      - name: Validate no literal tab escapes remain at line start
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          bad=[]
+          for p in Path('LeadEjecutivo.SemanticModel/definition').rglob('*.tmdl'):
+              for i,line in enumerate(p.read_text(encoding='utf-8').splitlines(),1):
+                  if line.startswith('\\t'):
+                      bad.append(f'{p}:{i}')
+          if bad:
+              raise SystemExit('Literal tab escapes remain: ' + ', '.join(bad[:20]))
+          print('TMDL indentation validation passed')
+          PY
+      - name: Commit normalized TMDL
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add LeadEjecutivo.SemanticModel/definition
+          git diff --cached --quiet || git commit -m "fix: normalize TMDL indentation"
+          git push
