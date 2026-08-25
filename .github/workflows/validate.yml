@@ -21,6 +21,7 @@ jobs:
               'LeadEjecutivo.SemanticModel/definition/model.tmdl',
               'LeadEjecutivo.SemanticModel/definition/database.tmdl',
               'LeadEjecutivo.SemanticModel/definition/relationships.tmdl',
+              'LeadEjecutivo.SemanticModel/definition/expressions.tmdl',
           ]
           for p in required:
               assert (root / p).exists(), f'Missing required artifact: {p}'
@@ -59,9 +60,6 @@ jobs:
           root_refs = [ln for ln in model_text.splitlines() if ln.startswith('ref table ')]
           assert root_refs, 'model.tmdl must contain root-level table references'
 
-          # Dimensions used by report filters must be physical M/import tables.
-          # This prevents Power BI Desktop errors where a calculated-table column
-          # lacks SourceColumn metadata during TOM database creation.
           for table_name, column_name in [
               ('DimFecha','Date'), ('DimSede','Sede'),
               ('DimCarrera','Carrera'), ('DimModalidad','Modalidad')
@@ -71,5 +69,9 @@ jobs:
               assert 'partition ' + table_name + ' = m' in text, f'{table_name} must use an M partition'
               assert 'partition ' + table_name + ' = calculated' not in text, f'{table_name} must not be a calculated table'
               assert f'sourceColumn: {column_name}' in text, f'{table_name}.{column_name} requires sourceColumn metadata'
+
+          expressions = (definition_dir/'expressions.tmdl').read_text(encoding='utf-8')
+          assert 'ApiVersion=' not in expressions, 'Salesforce.Data ApiVersion option is not supported by the target Power BI connector'
+          assert 'Salesforce.Data("https://login.salesforce.com/")' in expressions, 'SalesforceSource must use the supported Salesforce.Data call'
 
           print('PBIP/PBIR/TMDL structure validation passed')
