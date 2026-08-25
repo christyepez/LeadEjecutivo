@@ -10,10 +10,10 @@ table DimFecha
 		source = ```
 let
     Today = Date.From(DateTime.LocalNow()),
-    StartDate = #date(Date.Year(Today)-5, 1, 1),
-    EndDate = #date(Date.Year(Today)+1, 12, 31),
+    StartDate = #date(2026, 5, 1),
+    EndDate = Today,
     DayCount = Duration.Days(EndDate - StartDate) + 1,
-    Dates = List.Dates(StartDate, DayCount, #duration(1,0,0,0)),
+    Dates = if DayCount > 0 then List.Dates(StartDate, DayCount, #duration(1,0,0,0)) else {},
     T = Table.FromList(Dates, Splitter.SplitByNothing(), {"Date"}),
     Typed = Table.TransformColumns(T, {{"Date", each DateTime.From(_), type datetime}})
 in
