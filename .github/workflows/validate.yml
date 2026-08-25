@@ -8,7 +8,7 @@ jobs:
       - name: Validate PBIP, PBIR and TMDL structure
         shell: python
         run: |
-          import json, pathlib
+          import json, pathlib, re
 
           root = pathlib.Path('.')
           required = [
@@ -48,6 +48,13 @@ jobs:
           assert definition_dir.is_dir(), 'TMDL definition folder is missing'
           assert not (root/'LeadEjecutivo.SemanticModel/model.bim').exists(), 'Do not mix TMDL definition/ with model.bim'
           for f in definition_dir.rglob('*.tmdl'):
-              assert '\\t' not in f.read_text(encoding='utf-8'), f'Literal tab escape found in TMDL: {f}'
+              text = f.read_text(encoding='utf-8')
+              assert '\\t' not in text, f'Literal tab escape found in TMDL: {f}'
+
+          model_text = (definition_dir/'model.tmdl').read_text(encoding='utf-8')
+          bad_refs = [ln for ln in model_text.splitlines() if re.match(r'^\s+ref\s+', ln)]
+          assert not bad_refs, f'TMDL ref objects must be root-level, not indented: {bad_refs[:5]}'
+          root_refs = [ln for ln in model_text.splitlines() if ln.startswith('ref table ')]
+          assert root_refs, 'model.tmdl must contain root-level table references'
 
           print('PBIP/PBIR/TMDL structure validation passed')
