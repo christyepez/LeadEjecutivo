@@ -1,6 +1,18 @@
 table DimModalidad
 	column Modalidad
 		dataType: string
-	partition DimModalidad = calculated
+		sourceColumn: Modalidad
+
+	partition DimModalidad = m
 		mode: import
-		source = DISTINCT(SELECTCOLUMNS(Candidato, "Modalidad", Candidato[UI_Modalidad__c]))
+		source = ```
+let
+    Source = SalesforceSource,
+    Lead = Source{[Name="Lead"]}[Data],
+    Keep = Table.SelectColumns(Lead,{"UI_Modalidad__c"}, MissingField.UseNull),
+    Rename = Table.RenameColumns(Keep,{{"UI_Modalidad__c","Modalidad"}}),
+    Clean = Table.SelectRows(Rename, each [Modalidad] <> null and Text.Trim(Text.From([Modalidad])) <> ""),
+    DistinctRows = Table.Distinct(Clean)
+in
+    DistinctRows
+```
