@@ -1,0 +1,7 @@
+expression SalesforceSource = ```
+let
+    Source = Salesforce.Data("https://login.salesforce.com/", [ApiVersion="61.0"])
+in
+    Source
+```
+	lineageTag: 13dd300f-0db7-45c0-a753-d71741592416

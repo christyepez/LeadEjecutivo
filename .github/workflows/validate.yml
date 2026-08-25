@@ -1,0 +1,18 @@
+name: Validate PBIP
+on: [push, pull_request]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JSON and required files
+        shell: python
+        run: |
+          import json, pathlib, sys
+          root=pathlib.Path('.')
+          required=['LeadEjecutivo.pbip','LeadEjecutivo.Report/definition.pbir','LeadEjecutivo.SemanticModel/definition.pbism','LeadEjecutivo.SemanticModel/definition/model.tmdl']
+          for p in required:
+              assert (root/p).exists(), p
+          for f in root.rglob('*.json'):
+              json.loads(f.read_text(encoding='utf-8'))
+          print('PBIP structure validation passed')

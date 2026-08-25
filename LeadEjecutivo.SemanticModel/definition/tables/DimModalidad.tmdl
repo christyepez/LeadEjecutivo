@@ -1,0 +1,6 @@
+table DimModalidad
+	column Modalidad
+		dataType: string
+	partition DimModalidad = calculated
+		mode: import
+		source = DISTINCT(SELECTCOLUMNS(Candidato, "Modalidad", Candidato[UI_Modalidad__c]))

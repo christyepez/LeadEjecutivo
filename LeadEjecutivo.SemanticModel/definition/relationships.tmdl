@@ -1,0 +1,19 @@
+relationship 8d6c7d5f-8de4-4052-b872-426356c48ad1
+	fromColumn: Candidato.CreatedDate
+	toColumn: DimFecha.Date
+
+relationship ae9928b9-21d5-41f4-b635-8cae330822dc
+	fromColumn: Candidato.UI_Sede__c
+	toColumn: DimSede.Sede
+
+relationship 2e5819fe-dff6-4f5a-afbf-a7120281c8cd
+	fromColumn: Candidato.UI_CarreraPrimeraOpcionWeb__c
+	toColumn: DimCarrera.Carrera
+
+relationship 7dad4c9b-cbf3-45d1-a8fd-471c4871762c
+	fromColumn: Candidato.UI_Modalidad__c
+	toColumn: DimModalidad.Modalidad
+
+relationship 2711d364-e938-4fd2-a292-3f53de6e5353
+	fromColumn: 'Historial de candidatos'.LeadId
+	toColumn: Candidato.Id

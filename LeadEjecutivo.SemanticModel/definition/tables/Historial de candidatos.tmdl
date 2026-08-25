@@ -1,0 +1,30 @@
+table 'Historial de candidatos'
+\tlineageTag: b06131ad-8b0b-47a3-8a91-22eab2d50b45
+\tcolumn Id
+\t\tdataType: string
+\t\tsourceColumn: Id
+\tcolumn LeadId
+\t\tdataType: string
+\t\tsourceColumn: LeadId
+\tcolumn CreatedDate
+\t\tdataType: dateTime
+\t\tsourceColumn: CreatedDate
+\tcolumn Field
+\t\tdataType: string
+\t\tsourceColumn: Field
+\tcolumn OldValue
+\t\tdataType: string
+\t\tsourceColumn: OldValue
+\tcolumn NewValue
+\t\tdataType: string
+\t\tsourceColumn: NewValue
+\tpartition 'Historial de candidatos' = m
+\t\tmode: import
+\t\tsource = ```
+let
+    Source = SalesforceSource,
+    T = try Source{[Name="LeadHistory"]}[Data] otherwise #table({"Id","LeadId","CreatedDate","Field","OldValue","NewValue"},{}),
+    Keep = Table.SelectColumns(T,{"Id","LeadId","CreatedDate","Field","OldValue","NewValue"}, MissingField.UseNull)
+in
+    Keep
+```

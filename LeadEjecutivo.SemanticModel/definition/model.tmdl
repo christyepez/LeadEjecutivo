@@ -1,0 +1,12 @@
+model Model
+	culture: es-EC
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	ref table Candidato
+	ref table 'Historial de candidatos'
+	ref table Oportunidad
+	ref table DimFecha
+	ref table DimSede
+	ref table DimCarrera
+	ref table DimModalidad
+	ref table SF_ObjectCatalog

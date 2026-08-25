@@ -1,0 +1,6 @@
+table DimSede
+	column Sede
+		dataType: string
+	partition DimSede = calculated
+		mode: import
+		source = DISTINCT(SELECTCOLUMNS(Candidato, "Sede", Candidato[UI_Sede__c]))

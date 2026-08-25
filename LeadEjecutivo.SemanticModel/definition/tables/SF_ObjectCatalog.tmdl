@@ -1,0 +1,17 @@
+table SF_ObjectCatalog
+\tcolumn Name
+\t\tdataType: string
+\t\tsourceColumn: Name
+\tcolumn Kind
+\t\tdataType: string
+\t\tsourceColumn: Kind
+\tpartition SF_ObjectCatalog = m
+\t\tmode: import
+\t\tsource = ```
+let
+    Source = SalesforceSource,
+    Keep = Table.SelectColumns(Source,{"Name","Kind"}, MissingField.UseNull),
+    Sort = Table.Sort(Keep,{{"Name", Order.Ascending}})
+in
+    Sort
+```

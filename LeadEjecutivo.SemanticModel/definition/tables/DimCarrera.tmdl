@@ -1,0 +1,6 @@
+table DimCarrera
+	column Carrera
+		dataType: string
+	partition DimCarrera = calculated
+		mode: import
+		source = DISTINCT(SELECTCOLUMNS(Candidato, "Carrera", Candidato[UI_CarreraPrimeraOpcionWeb__c]))
