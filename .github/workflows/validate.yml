@@ -8,11 +8,40 @@ jobs:
       - name: Validate JSON and required files
         shell: python
         run: |
-          import json, pathlib, sys
-          root=pathlib.Path('.')
-          required=['LeadEjecutivo.pbip','LeadEjecutivo.Report/definition.pbir','LeadEjecutivo.SemanticModel/definition.pbism','LeadEjecutivo.SemanticModel/definition/model.tmdl']
+          import json, pathlib
+
+          root = pathlib.Path('.')
+          required = [
+              'LeadEjecutivo.pbip',
+              'LeadEjecutivo.Report/definition.pbir',
+              'LeadEjecutivo.SemanticModel/definition.pbism',
+              'LeadEjecutivo.SemanticModel/definition/model.tmdl',
+              'LeadEjecutivo.SemanticModel/definition/database.tmdl',
+              'LeadEjecutivo.SemanticModel/definition/relationships.tmdl',
+          ]
+
           for p in required:
-              assert (root/p).exists(), p
+              assert (root / p).exists(), f'Missing required artifact: {p}'
+
           for f in root.rglob('*.json'):
               json.loads(f.read_text(encoding='utf-8'))
-          print('PBIP structure validation passed')
+
+          pbism_path = root / 'LeadEjecutivo.SemanticModel/definition.pbism'
+          pbism = json.loads(pbism_path.read_text(encoding='utf-8'))
+          version = float(pbism.get('version', '0'))
+          assert version >= 4.0, (
+              'TMDL semantic models require definition.pbism version 4.0 or above. '
+              'Version 1.0 makes Power BI require model.bim.'
+          )
+
+          definition_dir = root / 'LeadEjecutivo.SemanticModel/definition'
+          assert definition_dir.is_dir(), 'TMDL definition folder is missing'
+
+          model_bim = root / 'LeadEjecutivo.SemanticModel/model.bim'
+          assert not model_bim.exists(), 'Project must not mix TMDL definition/ with model.bim'
+
+          for f in definition_dir.rglob('*.tmdl'):
+              text = f.read_text(encoding='utf-8')
+              assert '\\t' not in text, f'Literal tab escape found in TMDL: {f}'
+
+          print('PBIP/TMDL structure validation passed')
