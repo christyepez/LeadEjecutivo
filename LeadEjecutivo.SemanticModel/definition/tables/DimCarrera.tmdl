@@ -1,6 +1,18 @@
 table DimCarrera
 	column Carrera
 		dataType: string
-	partition DimCarrera = calculated
+		sourceColumn: Carrera
+
+	partition DimCarrera = m
 		mode: import
-		source = DISTINCT(SELECTCOLUMNS(Candidato, "Carrera", Candidato[UI_CarreraPrimeraOpcionWeb__c]))
+		source = ```
+let
+    Source = SalesforceSource,
+    Lead = Source{[Name="Lead"]}[Data],
+    Keep = Table.SelectColumns(Lead,{"UI_CarreraPrimeraOpcionWeb__c"}, MissingField.UseNull),
+    Rename = Table.RenameColumns(Keep,{{"UI_CarreraPrimeraOpcionWeb__c","Carrera"}}),
+    Clean = Table.SelectRows(Rename, each [Carrera] <> null and Text.Trim(Text.From([Carrera])) <> ""),
+    DistinctRows = Table.Distinct(Clean)
+in
+    DistinctRows
+```
