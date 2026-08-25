@@ -1,8 +1,8 @@
 table DimFecha
 	column Date
-	\tdataType: dateTime
-	\tisKey
-	\tformatString: Short Date
+		dataType: dateTime
+		isKey
+		formatString: Short Date
 	partition DimFecha = calculated
-	\tmode: import
-	\tsource = CALENDAR(DATE(YEAR(TODAY())-5,1,1), DATE(YEAR(TODAY())+1,12,31))
+		mode: import
+		source = CALENDAR(DATE(YEAR(TODAY())-5,1,1), DATE(YEAR(TODAY())+1,12,31))

@@ -1,26 +1,26 @@
 table 'Historial de candidatos'
 	lineageTag: b06131ad-8b0b-47a3-8a91-22eab2d50b45
 	column Id
-	\tdataType: string
-	\tsourceColumn: Id
+		dataType: string
+		sourceColumn: Id
 	column LeadId
-	\tdataType: string
-	\tsourceColumn: LeadId
+		dataType: string
+		sourceColumn: LeadId
 	column CreatedDate
-	\tdataType: dateTime
-	\tsourceColumn: CreatedDate
+		dataType: dateTime
+		sourceColumn: CreatedDate
 	column Field
-	\tdataType: string
-	\tsourceColumn: Field
+		dataType: string
+		sourceColumn: Field
 	column OldValue
-	\tdataType: string
-	\tsourceColumn: OldValue
+		dataType: string
+		sourceColumn: OldValue
 	column NewValue
-	\tdataType: string
-	\tsourceColumn: NewValue
+		dataType: string
+		sourceColumn: NewValue
 	partition 'Historial de candidatos' = m
-	\tmode: import
-	\tsource = ```
+		mode: import
+		source = ```
 let
     Source = SalesforceSource,
     T = try Source{[Name="LeadHistory"]}[Data] otherwise #table({"Id","LeadId","CreatedDate","Field","OldValue","NewValue"},{}),

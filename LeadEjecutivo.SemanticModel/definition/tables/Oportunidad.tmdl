@@ -1,23 +1,23 @@
 table Oportunidad
 	lineageTag: 752781f3-195d-4610-972a-d7208d8bbf52
 	column Id
-	\tdataType: string
-	\tsourceColumn: Id
+		dataType: string
+		sourceColumn: Id
 	column Name
-	\tdataType: string
-	\tsourceColumn: Name
+		dataType: string
+		sourceColumn: Name
 	column StageName
-	\tdataType: string
-	\tsourceColumn: StageName
+		dataType: string
+		sourceColumn: StageName
 	column CreatedDate
-	\tdataType: dateTime
-	\tsourceColumn: CreatedDate
+		dataType: dateTime
+		sourceColumn: CreatedDate
 	column CloseDate
-	\tdataType: dateTime
-	\tsourceColumn: CloseDate
+		dataType: dateTime
+		sourceColumn: CloseDate
 	partition Oportunidad = m
-	\tmode: import
-	\tsource = ```
+		mode: import
+		source = ```
 let
     Source = SalesforceSource,
     T = Source{[Name="Opportunity"]}[Data],

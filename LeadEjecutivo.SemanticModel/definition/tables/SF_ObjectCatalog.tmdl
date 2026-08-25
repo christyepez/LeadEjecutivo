@@ -1,13 +1,13 @@
 table SF_ObjectCatalog
 	column Name
-	\tdataType: string
-	\tsourceColumn: Name
+		dataType: string
+		sourceColumn: Name
 	column Kind
-	\tdataType: string
-	\tsourceColumn: Kind
+		dataType: string
+		sourceColumn: Kind
 	partition SF_ObjectCatalog = m
-	\tmode: import
-	\tsource = ```
+		mode: import
+		source = ```
 let
     Source = SalesforceSource,
     Keep = Table.SelectColumns(Source,{"Name","Kind"}, MissingField.UseNull),
