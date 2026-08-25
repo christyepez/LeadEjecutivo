@@ -1,23 +1,23 @@
 table Oportunidad
-\tlineageTag: 752781f3-195d-4610-972a-d7208d8bbf52
-\tcolumn Id
-\t\tdataType: string
-\t\tsourceColumn: Id
-\tcolumn Name
-\t\tdataType: string
-\t\tsourceColumn: Name
-\tcolumn StageName
-\t\tdataType: string
-\t\tsourceColumn: StageName
-\tcolumn CreatedDate
-\t\tdataType: dateTime
-\t\tsourceColumn: CreatedDate
-\tcolumn CloseDate
-\t\tdataType: dateTime
-\t\tsourceColumn: CloseDate
-\tpartition Oportunidad = m
-\t\tmode: import
-\t\tsource = ```
+	lineageTag: 752781f3-195d-4610-972a-d7208d8bbf52
+	column Id
+	\tdataType: string
+	\tsourceColumn: Id
+	column Name
+	\tdataType: string
+	\tsourceColumn: Name
+	column StageName
+	\tdataType: string
+	\tsourceColumn: StageName
+	column CreatedDate
+	\tdataType: dateTime
+	\tsourceColumn: CreatedDate
+	column CloseDate
+	\tdataType: dateTime
+	\tsourceColumn: CloseDate
+	partition Oportunidad = m
+	\tmode: import
+	\tsource = ```
 let
     Source = SalesforceSource,
     T = Source{[Name="Opportunity"]}[Data],

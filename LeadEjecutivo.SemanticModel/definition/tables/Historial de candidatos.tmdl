@@ -1,26 +1,26 @@
 table 'Historial de candidatos'
-\tlineageTag: b06131ad-8b0b-47a3-8a91-22eab2d50b45
-\tcolumn Id
-\t\tdataType: string
-\t\tsourceColumn: Id
-\tcolumn LeadId
-\t\tdataType: string
-\t\tsourceColumn: LeadId
-\tcolumn CreatedDate
-\t\tdataType: dateTime
-\t\tsourceColumn: CreatedDate
-\tcolumn Field
-\t\tdataType: string
-\t\tsourceColumn: Field
-\tcolumn OldValue
-\t\tdataType: string
-\t\tsourceColumn: OldValue
-\tcolumn NewValue
-\t\tdataType: string
-\t\tsourceColumn: NewValue
-\tpartition 'Historial de candidatos' = m
-\t\tmode: import
-\t\tsource = ```
+	lineageTag: b06131ad-8b0b-47a3-8a91-22eab2d50b45
+	column Id
+	\tdataType: string
+	\tsourceColumn: Id
+	column LeadId
+	\tdataType: string
+	\tsourceColumn: LeadId
+	column CreatedDate
+	\tdataType: dateTime
+	\tsourceColumn: CreatedDate
+	column Field
+	\tdataType: string
+	\tsourceColumn: Field
+	column OldValue
+	\tdataType: string
+	\tsourceColumn: OldValue
+	column NewValue
+	\tdataType: string
+	\tsourceColumn: NewValue
+	partition 'Historial de candidatos' = m
+	\tmode: import
+	\tsource = ```
 let
     Source = SalesforceSource,
     T = try Source{[Name="LeadHistory"]}[Data] otherwise #table({"Id","LeadId","CreatedDate","Field","OldValue","NewValue"},{}),

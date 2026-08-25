@@ -1,122 +1,122 @@
 table Candidato
-\tlineageTag: 5898f84c-b2e9-42c9-bc67-df303b3d07fe
+	lineageTag: 5898f84c-b2e9-42c9-bc67-df303b3d07fe
 
-\tmeasure 'Total Leads' = COUNTROWS(Candidato)
-\t\tformatString: #,0
+	measure 'Total Leads' = COUNTROWS(Candidato)
+	\tformatString: #,0
 
-\tmeasure 'Leads Gestionados' = CALCULATE([Total Leads], Candidato[Status] <> "Perdido")
-\t\tformatString: #,0
+	measure 'Leads Gestionados' = CALCULATE([Total Leads], Candidato[Status] <> "Perdido")
+	\tformatString: #,0
 
-\tmeasure 'Leads Perdidos' = CALCULATE([Total Leads], Candidato[Status] = "Perdido")
-\t\tformatString: #,0
+	measure 'Leads Perdidos' = CALCULATE([Total Leads], Candidato[Status] = "Perdido")
+	\tformatString: #,0
 
-\tmeasure 'Citas Efectivas' = CALCULATE([Total Leads], Candidato[Status] = "Cita efectiva")
-\t\tformatString: #,0
+	measure 'Citas Efectivas' = CALCULATE([Total Leads], Candidato[Status] = "Cita efectiva")
+	\tformatString: #,0
 
-\tmeasure 'Total Matriculas' = CALCULATE([Total Leads], Candidato[Status] IN {"Matriculado", "Matrícula", "Matricula"})
-\t\tformatString: #,0
-\t\tdescription: Mapeo provisional por Status. Validar contra objeto de matrícula en Salesforce.
+	measure 'Total Matriculas' = CALCULATE([Total Leads], Candidato[Status] IN {"Matriculado", "Matrícula", "Matricula"})
+	\tformatString: #,0
+	\tdescription: Mapeo provisional por Status. Validar contra objeto de matrícula en Salesforce.
 
-\tmeasure 'Total Inscritos' = CALCULATE([Total Leads], Candidato[Status] IN {"Inscrito", "Inscripción", "Inscripcion"})
-\t\tformatString: #,0
-\t\tdescription: Mapeo provisional por Status. Validar contra objeto de inscripción en Salesforce.
+	measure 'Total Inscritos' = CALCULATE([Total Leads], Candidato[Status] IN {"Inscrito", "Inscripción", "Inscripcion"})
+	\tformatString: #,0
+	\tdescription: Mapeo provisional por Status. Validar contra objeto de inscripción en Salesforce.
 
-\tmeasure 'Total Proyectados' = CALCULATE([Total Leads], Candidato[Status] = "Proyectado")
-\t\tformatString: #,0
-\t\tdescription: Mapeo provisional por Status. Validar con negocio/Salesforce.
+	measure 'Total Proyectados' = CALCULATE([Total Leads], Candidato[Status] = "Proyectado")
+	\tformatString: #,0
+	\tdescription: Mapeo provisional por Status. Validar con negocio/Salesforce.
 
-\tmeasure '% Lead a Cita' = DIVIDE([Citas Efectivas], [Total Leads])
-\t\tformatString: 0.0%
+	measure '% Lead a Cita' = DIVIDE([Citas Efectivas], [Total Leads])
+	\tformatString: 0.0%
 
-\tmeasure '% Lead a Matricula' = DIVIDE([Total Matriculas], [Total Leads])
-\t\tformatString: 0.0%
+	measure '% Lead a Matricula' = DIVIDE([Total Matriculas], [Total Leads])
+	\tformatString: 0.0%
 
-\tmeasure '% Gestionado a Matricula' = DIVIDE([Total Matriculas], [Leads Gestionados])
-\t\tformatString: 0.0%
+	measure '% Gestionado a Matricula' = DIVIDE([Total Matriculas], [Leads Gestionados])
+	\tformatString: 0.0%
 
-\tmeasure 'Matriculas YTD' = TOTALYTD([Total Matriculas], DimFecha[Date])
-\t\tformatString: #,0
+	measure 'Matriculas YTD' = TOTALYTD([Total Matriculas], DimFecha[Date])
+	\tformatString: #,0
 
-\tmeasure 'Inscritos YTD' = TOTALYTD([Total Inscritos], DimFecha[Date])
-\t\tformatString: #,0
+	measure 'Inscritos YTD' = TOTALYTD([Total Inscritos], DimFecha[Date])
+	\tformatString: #,0
 
-\tmeasure 'Proyectados YTD' = TOTALYTD([Total Proyectados], DimFecha[Date])
-\t\tformatString: #,0
+	measure 'Proyectados YTD' = TOTALYTD([Total Proyectados], DimFecha[Date])
+	\tformatString: #,0
 
-\tmeasure 'Leads Sin Actividad 7d' = CALCULATE([Leads Gestionados], FILTER(Candidato, ISBLANK(Candidato[LastActivityDate]) || DATEDIFF(Candidato[LastActivityDate], TODAY(), DAY) >= 7))
-\t\tformatString: #,0
+	measure 'Leads Sin Actividad 7d' = CALCULATE([Leads Gestionados], FILTER(Candidato, ISBLANK(Candidato[LastActivityDate]) || DATEDIFF(Candidato[LastActivityDate], TODAY(), DAY) >= 7))
+	\tformatString: #,0
 
-\tmeasure 'Leads Sin Actividad 30d' = CALCULATE([Leads Gestionados], FILTER(Candidato, ISBLANK(Candidato[LastActivityDate]) || DATEDIFF(Candidato[LastActivityDate], TODAY(), DAY) >= 30))
-\t\tformatString: #,0
+	measure 'Leads Sin Actividad 30d' = CALCULATE([Leads Gestionados], FILTER(Candidato, ISBLANK(Candidato[LastActivityDate]) || DATEDIFF(Candidato[LastActivityDate], TODAY(), DAY) >= 30))
+	\tformatString: #,0
 
-\tmeasure '% Perdidos' = DIVIDE([Leads Perdidos], [Total Leads])
-\t\tformatString: 0.0%
+	measure '% Perdidos' = DIVIDE([Leads Perdidos], [Total Leads])
+	\tformatString: 0.0%
 
-\tcolumn Id
-\t\tdataType: string
-\t\tsourceColumn: Id
+	column Id
+	\tdataType: string
+	\tsourceColumn: Id
 
-\tcolumn Status
-\t\tdataType: string
-\t\tsourceColumn: Status
+	column Status
+	\tdataType: string
+	\tsourceColumn: Status
 
-\tcolumn CreatedDate
-\t\tdataType: dateTime
-\t\tformatString: General Date
-\t\tsourceColumn: CreatedDate
+	column CreatedDate
+	\tdataType: dateTime
+	\tformatString: General Date
+	\tsourceColumn: CreatedDate
 
-\tcolumn LastActivityDate
-\t\tdataType: dateTime
-\t\tformatString: General Date
-\t\tsourceColumn: LastActivityDate
+	column LastActivityDate
+	\tdataType: dateTime
+	\tformatString: General Date
+	\tsourceColumn: LastActivityDate
 
-\tcolumn OwnerId
-\t\tdataType: string
-\t\tsourceColumn: OwnerId
+	column OwnerId
+	\tdataType: string
+	\tsourceColumn: OwnerId
 
-\tcolumn OwnerName
-\t\tdataType: string
-\t\tsourceColumn: Owner.Name
+	column OwnerName
+	\tdataType: string
+	\tsourceColumn: Owner.Name
 
-\tcolumn UI_Periodo__c
-\t\tdataType: string
-\t\tsourceColumn: UI_Periodo__c
+	column UI_Periodo__c
+	\tdataType: string
+	\tsourceColumn: UI_Periodo__c
 
-\tcolumn UI_Sede__c
-\t\tdataType: string
-\t\tsourceColumn: UI_Sede__c
+	column UI_Sede__c
+	\tdataType: string
+	\tsourceColumn: UI_Sede__c
 
-\tcolumn UI_UnidadNegocio__c
-\t\tdataType: string
-\t\tsourceColumn: UI_UnidadNegocio__c
+	column UI_UnidadNegocio__c
+	\tdataType: string
+	\tsourceColumn: UI_UnidadNegocio__c
 
-\tcolumn UI_CarreraPrimeraOpcionWeb__c
-\t\tdataType: string
-\t\tsourceColumn: UI_CarreraPrimeraOpcionWeb__c
+	column UI_CarreraPrimeraOpcionWeb__c
+	\tdataType: string
+	\tsourceColumn: UI_CarreraPrimeraOpcionWeb__c
 
-\tcolumn UI_Modalidad__c
-\t\tdataType: string
-\t\tsourceColumn: UI_Modalidad__c
+	column UI_Modalidad__c
+	\tdataType: string
+	\tsourceColumn: UI_Modalidad__c
 
-\tcolumn UI_Origen__c
-\t\tdataType: string
-\t\tsourceColumn: UI_Origen__c
+	column UI_Origen__c
+	\tdataType: string
+	\tsourceColumn: UI_Origen__c
 
-\tcolumn UI_Campana__c
-\t\tdataType: string
-\t\tsourceColumn: UI_Campana__c
+	column UI_Campana__c
+	\tdataType: string
+	\tsourceColumn: UI_Campana__c
 
-\tcolumn UI_RazonPerdido__c
-\t\tdataType: string
-\t\tsourceColumn: UI_RazonPerdido__c
+	column UI_RazonPerdido__c
+	\tdataType: string
+	\tsourceColumn: UI_RazonPerdido__c
 
-\tcolumn UI_SubrazonPerdido__c
-\t\tdataType: string
-\t\tsourceColumn: UI_SubrazonPerdido__c
+	column UI_SubrazonPerdido__c
+	\tdataType: string
+	\tsourceColumn: UI_SubrazonPerdido__c
 
-\tpartition Candidato = m
-\t\tmode: import
-\t\tsource = ```
+	partition Candidato = m
+	\tmode: import
+	\tsource = ```
 let
     Source = SalesforceSource,
     Lead = Source{[Name="Lead"]}[Data],
