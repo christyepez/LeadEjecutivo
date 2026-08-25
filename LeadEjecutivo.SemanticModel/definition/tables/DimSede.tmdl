@@ -1,6 +1,18 @@
 table DimSede
 	column Sede
 		dataType: string
-	partition DimSede = calculated
+		sourceColumn: Sede
+
+	partition DimSede = m
 		mode: import
-		source = DISTINCT(SELECTCOLUMNS(Candidato, "Sede", Candidato[UI_Sede__c]))
+		source = ```
+let
+    Source = SalesforceSource,
+    Lead = Source{[Name="Lead"]}[Data],
+    Keep = Table.SelectColumns(Lead,{"UI_Sede__c"}, MissingField.UseNull),
+    Rename = Table.RenameColumns(Keep,{{"UI_Sede__c","Sede"}}),
+    Clean = Table.SelectRows(Rename, each [Sede] <> null and Text.Trim(Text.From([Sede])) <> ""),
+    DistinctRows = Table.Distinct(Clean)
+in
+    DistinctRows
+```
