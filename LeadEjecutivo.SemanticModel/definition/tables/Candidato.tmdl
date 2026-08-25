@@ -15,15 +15,12 @@ table Candidato
 
 	measure 'Total Matriculas' = CALCULATE([Total Leads], Candidato[Status] IN {"Matriculado", "Matrícula", "Matricula"})
 		formatString: #,0
-		description: Mapeo provisional por Status. Validar contra objeto de matrícula en Salesforce.
 
 	measure 'Total Inscritos' = CALCULATE([Total Leads], Candidato[Status] IN {"Inscrito", "Inscripción", "Inscripcion"})
 		formatString: #,0
-		description: Mapeo provisional por Status. Validar contra objeto de inscripción en Salesforce.
 
 	measure 'Total Proyectados' = CALCULATE([Total Leads], Candidato[Status] = "Proyectado")
 		formatString: #,0
-		description: Mapeo provisional por Status. Validar con negocio/Salesforce.
 
 	measure '% Lead a Cita' = DIVIDE([Citas Efectivas], [Total Leads])
 		formatString: 0.0%
